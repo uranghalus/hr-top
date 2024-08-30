@@ -33,6 +33,7 @@ const CardWrapper: React.FC<CardWrapper> = ({
   backButtonHeader,
   children,
   headerLabel,
+  headerDescription,
   showSocial,
   className,
 }) => {
@@ -47,22 +48,26 @@ const CardWrapper: React.FC<CardWrapper> = ({
         >
           {headerLabel}
         </CardTitle>
-        <CardDescription>
-          <div className="flex items-center justify-center gap-2 ">
-            <span className="text-sm text-muted-foreground ">
-              {backButtonHeader}
-            </span>
-            <Link href={backButtonHref} className="font-bold text-blue-500">
-              {backButtonLabel}
-            </Link>
-          </div>
+        <CardDescription className="text-center">
+          {headerDescription}
+
+          {showSocial && <SocialMedia />}
           <div className="py-3 flex items-center text-xs text-gray-400 uppercase before:flex-1 before:border-t before:border-gray-200 before:me-6 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-neutral-500 dark:before:border-neutral-600 dark:after:border-neutral-600">
             Or
           </div>
-          {showSocial && <SocialMedia />}
         </CardDescription>
       </CardHeader>
       <CardContent>{children}</CardContent>
+      <CardFooter className="flex-col">
+        <div className="flex items-center justify-center gap-2 mt-6">
+          <span className="text-sm text-muted-foreground ">
+            {backButtonHeader}
+          </span>
+          <Link href={backButtonHref} className="font-bold text-blue-500">
+            {backButtonLabel}
+          </Link>
+        </div>
+      </CardFooter>
     </Card>
   );
 };

@@ -7,7 +7,7 @@ const SocialMedia = () => {
     <Button
       size={'lg'}
       variant={'outline'}
-      className="w-full gap-2 items-center text-gray-700"
+      className="w-full gap-2 items-center text-gray-700 mt-6"
     >
       <FcGoogle className="size-5" /> Signin With Google
     </Button>

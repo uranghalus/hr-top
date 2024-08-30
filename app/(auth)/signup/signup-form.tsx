@@ -10,28 +10,29 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import CardWrapper from '@/components/wrapper/card-wrapper';
-import { LoginSchema } from '@/lib/schema';
-import { loginService } from '@/lib/services/login';
+import { RegisterSchema } from '@/lib/schema';
+import { registerService } from '@/lib/services/register';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-
-const SigninFOrm = () => {
+const SignupForm = () => {
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<z.infer<typeof RegisterSchema>>({
+    resolver: zodResolver(RegisterSchema),
     defaultValues: {
       email: '',
       password: '',
+      name: '',
     },
   });
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
     startTransition(() => {
-      loginService(values).then((data) => {
+      registerService(values).then((data) => {
         if (data.error) {
           toast.error('Login Gagal!', {
             description: data.error,
@@ -46,17 +47,34 @@ const SigninFOrm = () => {
   };
   return (
     <CardWrapper
-      headerLabel={'Sign In'}
-      headerDescription={'Masuk Untuk Melanjutkan'}
-      backButtonHeader="Don't have an account yet?"
-      backButtonLabel="Sign Up"
-      backButtonHref={'/signup'}
+      headerLabel={'Sign Up'}
+      headerDescription={'Daftar Untuk Melanjutkan'}
+      backButtonHeader="Sudah punya akun?"
+      backButtonLabel="Masuk Disini"
+      backButtonHref={'/signin'}
       showSocial
       className={'min-w-96'}
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-2">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="Masukkan Nama"
+                      type="text"
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="email"
@@ -79,15 +97,7 @@ const SigninFOrm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <div className="flex items-center">
-                    <FormLabel>Password</FormLabel>
-                    <Link
-                      href="/forgot-password"
-                      className="ml-auto inline-block text-sm underline"
-                    >
-                      Forgot your password?
-                    </Link>
-                  </div>
+                  <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -114,4 +124,4 @@ const SigninFOrm = () => {
   );
 };
 
-export default SigninFOrm;
+export default SignupForm;
