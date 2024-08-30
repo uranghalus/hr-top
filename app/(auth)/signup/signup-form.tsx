@@ -15,13 +15,14 @@ import { registerService } from '@/lib/services/register';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 const SignupForm = () => {
   const [isPending, startTransition] = useTransition();
-
+  const [error, setError] = useState<string | undefined>('');
+  const [success, setSuccess] = useState<string | undefined>('');
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -31,9 +32,12 @@ const SignupForm = () => {
     },
   });
   const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
+    setError('');
+    setSuccess('');
     startTransition(() => {
       registerService(values).then((data) => {
-        if (data.error) {
+        setError(data.error);
+        if (error) {
           toast.error('Login Gagal!', {
             description: data.error,
           });
@@ -63,7 +67,7 @@ const SignupForm = () => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Nama</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
